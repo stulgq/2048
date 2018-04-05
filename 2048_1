@@ -1,0 +1,121 @@
+import random
+
+l = [0] * 16
+a, b = random.sample(list(range(16)), 2)
+l[a] = 2
+l[b] = 2
+
+
+def show(l):
+    for i in range(len(l)):
+        a=str(l[i])
+        if l[i]==0:
+            a=" "
+        if i % 4 == 0:
+            print()
+            print(("+" + "-" * 5) * 4 + "+")
+            print("|", end="")
+        print(a.center(5) + "|", end="")
+    print()
+    print(("+" + "-" * 5) * 4 + "+")
+def get_ws(l):
+    l1=[]
+    for n in range(4):
+        if l[i+n*4]>0:
+            l1.append([1,i+n*4])
+        else:
+            l1.append([0, i + n * 4])
+    return l1
+def deal_ws(l):
+    for j in range(3):
+        if l[j * 4 + i] == l[(j + 1) * 4 + i]:
+            l[j * 4 + i] *= 2
+            l[(j + 1) * 4 + i] = 0
+            if j == 1 or j == 2:
+                break
+            if l[(j + 2) * 4 + i] == l[(j + 3) * 4 + i]:
+                l[(j + 2) * 4 + i] *= 2
+                l[(j + 3) * 4 + i] = 0
+                break
+    return l
+def get_ad(l):
+    l1=[]
+    for n in range(4):
+        if l[i*4+n]>0:
+            l1.append([1,i*4+n])
+        else:
+            l1.append([0, i*4+n])
+    return l1
+def deal_ad(l):
+    for j in range(3):
+        if l[i * 4 + j] == l[i * 4 + j+1]:
+            l[i * 4 + j] *= 2
+            l[i * 4 + j+1] = 0
+            if j == 1 or j == 2:
+                break
+            if l[i * 4 + j+2] == l[i * 4 + j+3]:
+                l[i * 4 + j+2] *= 2
+                l[i * 4 + j+3] = 0
+                break
+    return l
+def insert(l):
+    l2=[i for i in range(len(l)) if l[i]==0]
+    if l2:
+        a=random.sample(l2,1)[0]
+        b=random.sample([2,4],1)[0]
+        l[a]=b
+    return l2
+
+
+while True:
+    show(l)
+    input_key=input('请输入：')
+    if input_key=="w":
+        # i表示列数
+        for i in range(4):
+            l1=get_ws(l)
+            l1 = sorted(l1, key=lambda x: x[0], reverse=True)
+            l[i::4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+            l=deal_ws(l)
+            l1 = get_ws(l)
+            l1 = sorted(l1, key=lambda x: x[0], reverse=True)
+            l[i::4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+    if input_key=="a":
+        # i表示行数
+        for i in range(4):
+            l1 = get_ad(l)
+            l1 = sorted(l1, key=lambda x: x[0], reverse=True)
+            l[i*4:i*4+4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+            l = deal_ad(l)
+            l1 = get_ad(l)
+            l1 = sorted(l1, key=lambda x: x[0], reverse=True)
+            l[i * 4:i * 4 + 4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+    if input_key=="s":
+        # i表示列数
+        for i in range(4):
+            l1=get_ws(l)
+            l1 = sorted(l1, key=lambda x: x[0])
+            l[i::4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+            l=deal_ws(l)
+            l1 = get_ws(l)
+            l1 = sorted(l1, key=lambda x: x[0])
+            l[i::4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+    if input_key=="d":
+        # i表示行数
+        for i in range(4):
+            l1 = get_ad(l)
+            l1 = sorted(l1, key=lambda x: x[0])
+            l[i * 4:i * 4 + 4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+            l = deal_ad(l)
+            l1 = get_ad(l)
+            l1 = sorted(l1, key=lambda x: x[0])
+            l[i * 4:i * 4 + 4] = l[l1[0][1]], l[l1[1][1]], l[l1[2][1]], l[l1[3][1]]
+    if input_key=="q":
+        print('退出游戏')
+        break
+    l2=insert(l)
+    if not l2:
+        print("游戏结束")
+        break
+    if 2048 in l:
+        print("恭喜你")
